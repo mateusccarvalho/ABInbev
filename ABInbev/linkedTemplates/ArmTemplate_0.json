@@ -57,7 +57,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/API_Request')]",
+			"name": "[concat(parameters('factoryName'), '/API_REQUEST')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -106,7 +106,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Request')]",
+			"name": "[concat(parameters('factoryName'), '/REQUEST')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -148,7 +148,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "API_Request",
+								"referenceName": "API_REQUEST",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -168,8 +168,46 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/API_Request')]",
+				"[concat(variables('factoryId'), '/datasets/API_REQUEST')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_RAW_FILE')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DAILY_UPDATE')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "REQUEST",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2024-09-17T15:07:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								0
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/REQUEST')]"
 			]
 		}
 	]
