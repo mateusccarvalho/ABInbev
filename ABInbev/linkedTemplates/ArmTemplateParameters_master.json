@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ABInbev"
+		},
+		"AzureDataLakeStorage_accountKey": {
+			"value": ""
+		},
+		"APIREQUEST_properties_typeProperties_url": {
+			"value": "https://api.openbrewerydb.org/breweries"
+		},
+		"AzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://medalionabinbevquest.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
