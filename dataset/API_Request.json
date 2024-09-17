@@ -1,6 +1,10 @@
 {
 	"name": "API_Request",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "APIREQUEST",
+			"type": "LinkedServiceReference"
+		},
 		"annotations": [],
 		"type": "RestResource",
 		"schema": []
