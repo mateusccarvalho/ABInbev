@@ -45,7 +45,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "csvrawfile",
+						"referenceName": "CSV_RAW_FILE",
 						"type": "DatasetReference"
 					}
 				]
