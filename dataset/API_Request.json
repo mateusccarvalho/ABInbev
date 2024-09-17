@@ -1,0 +1,8 @@
+{
+	"name": "API_Request",
+	"properties": {
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}
