@@ -1,0 +1,12 @@
+{
+	"name": "APIREQUEST",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://api.openbrewerydb.org/breweries",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
