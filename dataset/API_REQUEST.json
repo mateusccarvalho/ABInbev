@@ -1,5 +1,5 @@
 {
-	"name": "API_Request",
+	"name": "API_REQUEST",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "APIREQUEST",

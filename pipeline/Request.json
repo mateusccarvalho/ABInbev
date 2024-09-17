@@ -39,7 +39,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "API_Request",
+						"referenceName": "API_REQUEST",
 						"type": "DatasetReference"
 					}
 				],
