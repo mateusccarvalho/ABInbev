@@ -1,0 +1,9 @@
+{
+	"name": "Quest",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "394854df-9fba-4f4b-a4e1-46c4764d8977",
+		"tenantId": "610e9057-3c4f-4b45-b8a0-095ac9ef7121"
+	}
+}
