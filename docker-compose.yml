@@ -92,7 +92,7 @@ services:
       - SPARK_MASTER=spark://spark-master:7077  # Conecta o Jupyter ao Spark
     command: >
       bash -c "pip install delta-spark &&
-               start-notebook.sh --NotebookApp.token=''"  
+               start-notebook.sh --NotebookApp.token=''"  # Inicia o Jupyter sem token de autenticação
 
 networks:
   code-with-yu:
