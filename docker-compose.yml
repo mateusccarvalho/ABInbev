@@ -1,0 +1,84 @@
+version: '3'
+
+x-spark-common: &spark-common
+  image: bitnami/spark:latest
+  volumes:
+    - ./jobs:/opt/bitnami/spark/jobs
+  networks:
+    - code-with-yu
+
+x-airflow-common: &airflow-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file:
+    - airflow.env
+  volumes:
+    - ./jobs:/opt/airflow/jobs
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./data:/data  
+  depends_on:
+    - postgres
+  networks:
+    - code-with-yu
+  environment:
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__API__AUTH_BACKEND=airflow.api.auth.backend.basic_auth
+
+services:
+  spark-master:
+    <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.master.Master
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+
+  spark-worker:
+    <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_MODE: worker
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_MASTER_URL: spark://spark-master:7077
+
+  postgres:
+    image: postgres:14.0
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - code-with-yu
+
+  webserver:
+    <<: *airflow-common
+    command: >
+      bash -c "pip install --upgrade apache-airflow-providers-openlineage>=1.8.0 &&
+      airflow db upgrade &&
+      airflow webserver"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - scheduler
+
+  scheduler:
+    <<: *airflow-common
+    command: >
+      bash -c "pip install --upgrade apache-airflow-providers-openlineage>=1.8.0 &&
+      airflow db migrate &&
+      airflow users create --username airflow --firstname Mateus --lastname Carvalho --role Admin --email mateusccarvalho@hotmail.com --password airflow &&
+      airflow scheduler"
+    depends_on:
+      - postgres
+
+networks:
+  code-with-yu:
+
+volumes:
+  postgres_data:
