@@ -8,7 +8,6 @@ silver_path = '/data/silver'
 gold_path = '/data/gold' 
 
 def processar_dados_gold():
-    """Cria uma visão agregada da quantidade de cervejarias por tipo e localização."""
     spark = SparkSession.builder \
         .appName("gold_layer_dag") \
         .getOrCreate()
@@ -16,7 +15,7 @@ def processar_dados_gold():
     # Ler os dados da camada Silver
     silver_df = spark.read.parquet(silver_path)
 
-    # Agregar a quantidade de cervejarias por tipo e localização
+    # Agregar a quantidade de cervejarias por tipo e cidade
     aggregated_df = silver_df.groupBy("brewery_type", "city").count()
 
     # Salvar os dados agregados na camada Gold em formato Parquet
