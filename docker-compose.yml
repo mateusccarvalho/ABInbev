@@ -10,7 +10,7 @@ x-spark-common: &spark-common
 x-airflow-common: &airflow-common
   build:
     context: .
-    dockerfile: Dockerfile  # Certifique-se de que seu Dockerfile esteja configurado para o Airflow
+    dockerfile: Dockerfile 
   env_file:
     - airflow.env
   volumes:
@@ -78,18 +78,18 @@ services:
       - postgres
 
   jupyter:
-    image: jupyter/pyspark-notebook:latest  # Imagem oficial do Jupyter com PySpark
+    image: jupyter/pyspark-notebook:latest  
     ports:
-      - "8888:8888"  # Porta para acessar o Jupyter
+      - "8888:8888"  
     volumes:
-      - ./data:/home/jovyan/work  # Diretório compartilhado
+      - ./data:/home/jovyan/work 
       - ./data/bronze:/home/jovyan/work/bronze
       - ./data/silver:/home/jovyan/work/silver
       - ./data/gold:/home/jovyan/work/gold
     networks:
       - code-with-yu
     environment:
-      - SPARK_MASTER=spark://spark-master:7077  # Conecta o Jupyter ao Spark
+      - SPARK_MASTER=spark://spark-master:7077  
     command: >
       bash -c "pip install delta-spark &&
                start-notebook.sh --NotebookApp.token=''"  # Inicia o Jupyter sem token de autenticação

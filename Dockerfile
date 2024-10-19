@@ -12,11 +12,12 @@ USER airflow
 
 RUN pip install --upgrade apache-airflow-providers-openlineage>=1.8.0 && \
     pip install apache-airflow-providers-apache-spark && \
-    pip install delta-spark && \
+    pip install apache-airflow-providers-papermill && \
+    pip install papermill && \
     pip install jupyter
 
 EXPOSE 8888
 
 WORKDIR /home/airflow/work
 
-CMD ["dags", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
