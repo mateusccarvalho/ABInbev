@@ -5,13 +5,17 @@ import requests
 import json
 import os
 
-# Define o path para salvar os dados em Json
-bronze_raw_path = '/data/bronze/breweries.json'
-
+# Função para consumir e salvar os dados da API
 def consumir_dados():
     url = "https://api.openbrewerydb.org/breweries"
     response = requests.get(url)
     data = response.json()
+
+    # Obter a data atual e formatá-la como yyyy/mm/dd
+    current_date = datetime.now().strftime('%Y/%m/%d')
+
+    # Definir o caminho de destino seguindo a estrutura yyyy/mm/dd
+    bronze_raw_path = f'/data/bronze/{current_date}/breweries.json'
 
     # Criar diretórios se não existirem
     os.makedirs(os.path.dirname(bronze_raw_path), exist_ok=True)
@@ -20,7 +24,7 @@ def consumir_dados():
     with open(bronze_raw_path, 'w') as f:
         json.dump(data, f)
 
-# Definir o DAG
+# Definir a DAG
 default_args = {
     'owner': 'Mateus Carvalho',
     'start_date': datetime(2024, 10, 1),
@@ -28,4 +32,7 @@ default_args = {
 }
 
 with DAG('bronze_layer_dag', default_args=default_args, schedule_interval='@daily', catchup=False) as dag:
-    consumir_dados_task = PythonOperator(task_id='consumir_dados', python_callable=consumir_dados)
+    consumir_dados_task = PythonOperator(
+        task_id='consumir_dados',
+        python_callable=consumir_dados
+    )

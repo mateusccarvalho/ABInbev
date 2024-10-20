@@ -12,8 +12,8 @@ USER airflow
 
 RUN pip install --upgrade apache-airflow-providers-openlineage>=1.8.0 && \
     pip install apache-airflow-providers-apache-spark && \
-    pip install apache-airflow-providers-papermill && \
-    pip install papermill && \
+    #pip install apache-airflow-providers-papermill && \
+    #pip install papermill && \
     pip install jupyter
 
 EXPOSE 8888
