@@ -12,7 +12,15 @@ O projeto segue uma arquitetura baseada em contêineres:
 │   ├── bronze_layer_dag.py       # DAG responsável pela ingestão de dados da API
 │   ├── silver_layer_dag.py       # DAG para transformar os dados da camada Bronze para a Silver
 ├── data
-│   └── ntb_gold.ipynb            # Notebook para análise e visualização dos dados
+│   └── bronze                    # Pasta para iniciar a hierarquia de pastas para salvar os arquivos brutos
+│       └── YYYY                  # Hierarquia de Ano
+│       └── MM                    # Hierarquia de Mês
+│       └── DD                    # Hierarquia de Dia
+│           └── Beweries.json     # Arquivo bruto salvo diariamente
+│   └── silver                    # Pasta para salvar os dados em formato .parquet]
+│       └── *.parquet             # Arquivos em parquet.parquet
+│   └── ntb_gold                  # Pasta para salvar o notebook
+│       └── ntb_gold.ipynb        # Notebook para análise e visualização dos dados
 ├── docker-compose.yml            # Arquivo para orquestrar os serviços em contêineres
 ├── Dockerfile                    # Arquivo Docker para configurar o ambiente Airflow + Spark
 └── README.md                     # Documentação do projeto
@@ -26,6 +34,27 @@ O projeto segue uma arquitetura baseada em contêineres:
 - Python: Linguagem principal utilizada no projeto.
 - Pandas (opcional): Para manipulação de dados no notebook.
 
+## 🥉 Camada Bronze
+Os dados brutos são salvos na camada Bronze em formato JSON, organizados em uma hierarquia de diretórios no seguinte formato:
+~~~
+YYYY/MM/DD/breweries.json
+~~~
+Essa organização facilita a consulta e o processamento incremental dos dados, permitindo a captura de dados diários de forma estruturada.
+
+## 🥈 Camada Silver
+Na camada Silver, os dados passam por um processamento para inclusão de colunas que acompanham o ciclo de vida das informações. O processo é o seguinte:
+
+O pipeline verifica se já existem dados na camada Silver. Se não houver dados:
+- A camada Silver é criada a partir dos dados da Bronze.
+São adicionadas duas colunas:
+- insert_date: Preenchida com a data em que o dado foi inserido.
+- update_date: Inicialmente nula, esta coluna só será populada se o dado for atualizado no futuro.
+Se já houver dados na camada Silver, o pipeline realiza um merge entre os dados novos e os antigos. Neste merge:
+- A coluna insert_date mantém o valor original do dado.
+- A coluna update_date é atualizada com a data atual apenas se os dados tiverem sido modificados.
+
+## 🥇 Camada Gold
+A camada Gold é gerada a partir de um notebook que lê os dados processados na Silver, em formato Parquet, e realiza análises e visualizações. O notebook utiliza a biblioteca Matplotlib para criar gráficos que auxiliam na interpretação dos dados, gerando insights a partir das informações disponíveis na camada Silver.
 
 ## 🚀 Como Executar o Projeto
 Clone este repositório:
